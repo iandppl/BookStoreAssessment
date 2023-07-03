@@ -23,8 +23,8 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/{titleOrAuthorName}")
-    public ResponseEntity<List<BookDTO>> createBook(@PathVariable("titleOrAuthorName") String titleOrAuthorName) {
+    @GetMapping()
+    public ResponseEntity<List<BookDTO>> createBook(@RequestParam String titleOrAuthorName) {
         List<BookDTO> searchResult = bookService.findBooksByTitleOrAuthor(titleOrAuthorName);
         return ResponseEntity.ok(searchResult);
     }
