@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    # driverClassName: com.mysql.jdbc.Driver
+    # All settings here is only for local testing
+    # change password of mysql schema here
+    url: jdbc:postgresql://localhost:5432/bookstore
+    # change user name of mysql db here
+    username: postgres
+    # change password of mysql db here
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQL81Dialect
+      format_sql: true
+    generate-ddl: true
+    show-sql: true
