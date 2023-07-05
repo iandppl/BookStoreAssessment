@@ -42,7 +42,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void createOrUpdateBooks_withSuccessSaving_expectTrue(){
+    public void testCreateBooks_withSuccessSaving_expectTrue(){
         AuthorDTO authorDTO = new AuthorDTO();
         authorDTO.setName("John");
         authorDTO.setBirthday("12/12/1960");
@@ -64,16 +64,107 @@ public class BookServiceImplTest {
         book.setYear(1980);
         book.setPrice(12.99);
         book.setGenre("Fairy Tale");
-
+        given(bookRepository.findById(any())).willReturn(Optional.ofNullable(null));
         given(bookRepository.save(any())).willReturn(book);
 
-        boolean result = bookService.createOrUpdateBook(bookDTO);
+        boolean result = bookService.createBook(bookDTO);
 
         Assertions.assertTrue(result);
     }
 
     @Test
-    public void findBooksByTitleOrAuthor_withNoResult_expectNoBooksFoundException(){
+    public void testCreateBooks_withBookAlreadyInDatabase_expectFalse(){
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setName("John");
+        authorDTO.setBirthday("12/12/1960");
+        BookDTO bookDTO  = new BookDTO();
+        bookDTO.setAuthorDTOList(List.of(authorDTO));
+        bookDTO.setIsbn("12345");
+        bookDTO.setTitle("Little Mermaid");
+        bookDTO.setYear(1980);
+        bookDTO.setPrice(12.99);
+        bookDTO.setGenre("Fairy Tale");
+
+        Author foundAuthor = new Author();
+        foundAuthor.setName("John");
+        foundAuthor.setBirthday("12/12/1960");
+        Book book  = new Book();
+        book.setAuthors(List.of(foundAuthor));
+        book.setIsbn("12345");
+        book.setTitle("Little Mermaid");
+        book.setYear(1980);
+        book.setPrice(12.99);
+        book.setGenre("Fairy Tale");
+        given(bookRepository.findById(any())).willReturn(Optional.of(book));
+
+        boolean result = bookService.createBook(bookDTO);
+
+        Assertions.assertFalse(result);
+    }
+
+    @Test
+    public void testUpdateBooks_withSuccessSaving_expectTrue(){
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setName("John");
+        authorDTO.setBirthday("12/12/1960");
+        BookDTO bookDTO  = new BookDTO();
+        bookDTO.setAuthorDTOList(List.of(authorDTO));
+        bookDTO.setIsbn("12345");
+        bookDTO.setTitle("Little Mermaid");
+        bookDTO.setYear(1980);
+        bookDTO.setPrice(12.99);
+        bookDTO.setGenre("Fairy Tale");
+
+        Author foundAuthor = new Author();
+        foundAuthor.setName("John");
+        foundAuthor.setBirthday("12/12/1960");
+        Book book  = new Book();
+        book.setAuthors(List.of(foundAuthor));
+        book.setIsbn("12345");
+        book.setTitle("Little Mermaid");
+        book.setYear(1980);
+        book.setPrice(12.99);
+        book.setGenre("Fairy Tale");
+        given(bookRepository.findById(any())).willReturn(Optional.of(book));
+        given(bookRepository.save(any())).willReturn(book);
+
+        boolean result = bookService.updateBook(bookDTO);
+
+        Assertions.assertTrue(result);
+    }
+
+    @Test
+    public void testUpdateBooks_withBookAlreadyInDatabase_expectFalse(){
+        AuthorDTO authorDTO = new AuthorDTO();
+        authorDTO.setName("John");
+        authorDTO.setBirthday("12/12/1960");
+        BookDTO bookDTO  = new BookDTO();
+        bookDTO.setAuthorDTOList(List.of(authorDTO));
+        bookDTO.setIsbn("12345");
+        bookDTO.setTitle("Little Mermaid");
+        bookDTO.setYear(1980);
+        bookDTO.setPrice(12.99);
+        bookDTO.setGenre("Fairy Tale");
+
+        Author foundAuthor = new Author();
+        foundAuthor.setName("John");
+        foundAuthor.setBirthday("12/12/1960");
+        Book book  = new Book();
+        book.setAuthors(List.of(foundAuthor));
+        book.setIsbn("12345");
+        book.setTitle("Little Mermaid");
+        book.setYear(1980);
+        book.setPrice(12.99);
+        book.setGenre("Fairy Tale");
+        given(bookRepository.findById(any())).willReturn(Optional.ofNullable(null));
+
+        boolean result = bookService.updateBook(bookDTO);
+
+        Assertions.assertFalse(result);
+    }
+
+    @Test
+    public void testFindBooksByTitleOrAuthor_withNoResult_expectNoBooksFoundException(){
         given(bookRepository.findByTitle(any())).willReturn(new ArrayList<>());
         given(authorRepository.findById(any())).willReturn(Optional.ofNullable(null));
 
@@ -84,7 +175,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void findBooksByTitleOrAuthor_withAuthorResult_expectBookSizeToBe1(){
+    public void testFindBooksByTitleOrAuthor_withAuthorResult_expectBookSizeToBe1(){
         given(bookRepository.findByTitle(any())).willReturn(new ArrayList<>());
         Author foundAuthor = new Author();
         foundAuthor.setName("John");
@@ -113,7 +204,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void findBooksByTitleOrAuthor_withTitleResult_expectBookSizeToBe1(){
+    public void testFindBooksByTitleOrAuthor_withTitleResult_expectBookSizeToBe1(){
         Author foundAuthor = new Author();
         foundAuthor.setName("John");
         foundAuthor.setBirthday("12/12/1960");
@@ -141,7 +232,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void deleteBook_withInvalidIsbn_expectFalse(){
+    public void testDeleteBook_withInvalidIsbn_expectFalse(){
         given(bookRepository.findById(any())).willReturn(Optional.ofNullable(null));
 
         boolean result = bookService.deleteBook("1234");
@@ -150,7 +241,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void deleteBook_withValidIsbn_expectTrue(){
+    public void testDeleteBook_withValidIsbn_expectTrue(){
         Author foundAuthor = new Author();
         foundAuthor.setName("John");
         foundAuthor.setBirthday("12/12/1960");

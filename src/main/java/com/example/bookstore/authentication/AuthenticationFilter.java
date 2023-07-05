@@ -21,9 +21,11 @@ public class AuthenticationFilter extends GenericFilterBean {
         try {
             AuthenticationService as = new AuthenticationService();
             Authentication authentication = as.getAuthentication((HttpServletRequest) request);
-            if(
-                ((HttpServletRequest) request).getMethod().equals("DELETE") &&
-                !((HttpServletRequest) request).getHeader("X-ROLE").equals("OWNER")
+            String headerRoles = ((HttpServletRequest) request).getHeader("X-ROLE");
+            if (
+                    ((HttpServletRequest) request).getMethod().equals("DELETE") &&
+                            headerRoles != null &&
+                            !headerRoles.equals("OWNER")
             ) {
                 throw new AuthorizationServiceException("User not authorise to delete");
             }

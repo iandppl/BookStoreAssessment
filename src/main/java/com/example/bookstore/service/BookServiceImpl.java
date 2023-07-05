@@ -2,8 +2,8 @@ package com.example.bookstore.service;
 
 import com.example.bookstore.domain.Author;
 import com.example.bookstore.domain.Book;
-import com.example.bookstore.dto.AuthorDTO;
 import com.example.bookstore.dto.BookDTO;
+import com.example.bookstore.exception.BookCreationErrorException;
 import com.example.bookstore.exception.NoBooksFoundException;
 import com.example.bookstore.repository.AuthorRepository;
 import com.example.bookstore.repository.BookRepository;
@@ -36,9 +36,24 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean createOrUpdateBook(BookDTO bookDTO) {
+    public boolean createBook(BookDTO bookDTO) {
         try {
             Book book = mapperService.fromDTO(bookDTO);
+            Book previousBook = bookRepository.findById(book.getIsbn()).orElse(null);
+            if(previousBook != null) throw new BookCreationErrorException("Book is already created");
+            bookRepository.save(book);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateBook(BookDTO bookDTO) {
+        try {
+            Book book = mapperService.fromDTO(bookDTO);
+            Book previousBook = bookRepository.findById(book.getIsbn()).orElse(null);
+            if(previousBook == null) throw new NoBooksFoundException("No such book to update");
             bookRepository.save(book);
             return true;
         } catch (Exception e) {

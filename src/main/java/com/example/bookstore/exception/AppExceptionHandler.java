@@ -12,8 +12,18 @@ import java.util.Date;
 
 @ControllerAdvice
 public class AppExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = {BookCreationException.class})
-    public ResponseEntity<Object> handleBookCreationException(BookCreationException ex, WebRequest request) {
+    @ExceptionHandler(value = {BookCreationErrorException.class})
+    public ResponseEntity<Object> handleBookCreationException(BookCreationErrorException ex, WebRequest request) {
+        String errorMessageDescription = ex.getLocalizedMessage();
+        if(errorMessageDescription == null) errorMessageDescription = ex.toString();
+
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), errorMessageDescription);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+    }
+
+    @ExceptionHandler(value = {BookUpdateErrorException.class})
+    public ResponseEntity<Object> handleBookUpdateException(BookUpdateErrorException ex, WebRequest request) {
         String errorMessageDescription = ex.getLocalizedMessage();
         if(errorMessageDescription == null) errorMessageDescription = ex.toString();
 
