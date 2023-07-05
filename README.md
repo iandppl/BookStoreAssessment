@@ -31,8 +31,8 @@ This portion of the guarding of api can be replaced with JWT
 1) Get "/api/book?titleOrAuthorName={titleOrAuthorName}"
  - Fetches all books that contains either the title or author (exact match)
 2) Post "/api/book/" 
-   - Creates or updates BookDTO objects and takes in BookDTO object, 
-   - example:{
+   - Creates BookDTO objects and takes in BookDTO object and if book id is created then BookCreationErrorException will be thrown and will return true if successful
+   - Example request body input:{
         "isbn": "1236",
         "title": "Little Mermaid",
         "authorDTOList": [
@@ -45,8 +45,25 @@ This portion of the guarding of api can be replaced with JWT
         "price": 20.50,
         "genre":"Fiction"
      }
-3) Delete "/api/book?isbn={isbn}" 
+3) Put "/api/book/"
+   - Update BookDTO objects and takes in BookDTO object and if book id is created then BookUpdateErrorException will be thrown and will return true if successful
+   - Example request body input:{
+     "isbn": "1236",
+     "title": "Little Mermaid",
+     "authorDTOList": [
+     {
+     "name":"John",
+     "birthday":"11/11/1991"
+     }
+     ],
+     "year":2012,
+     "price": 20.50,
+     "genre":"Fiction"
+     }
+4) Delete "/api/book?isbn={isbn}" 
    - Delete books using isbn id to delete books in database
+   - Will return true if delete is successful
+   - Will throw BooksDeletionErrorException for deletion error
    - Only Owner role can trigger this api
    - Role can be added via the http request header with X-ROLE as the key and Owner as the value
    - This portion of the api guard can be replaced with JWT role authorisation

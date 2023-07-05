@@ -4,6 +4,8 @@ import com.example.bookstore.domain.Author;
 import com.example.bookstore.domain.Book;
 import com.example.bookstore.dto.BookDTO;
 import com.example.bookstore.exception.BookCreationErrorException;
+import com.example.bookstore.exception.BookDeletionErrorException;
+import com.example.bookstore.exception.BookUpdateErrorException;
 import com.example.bookstore.exception.NoBooksFoundException;
 import com.example.bookstore.repository.AuthorRepository;
 import com.example.bookstore.repository.BookRepository;
@@ -44,7 +46,7 @@ public class BookServiceImpl implements BookService {
             bookRepository.save(book);
             return true;
         } catch (Exception e) {
-            return false;
+            throw new BookCreationErrorException(e.getMessage());
         }
     }
 
@@ -57,7 +59,7 @@ public class BookServiceImpl implements BookService {
             bookRepository.save(book);
             return true;
         } catch (Exception e) {
-            return false;
+            throw new BookUpdateErrorException(e.getMessage());
         }
     }
 
@@ -82,12 +84,12 @@ public class BookServiceImpl implements BookService {
     public boolean deleteBook(String isbn) {
         try {
             Book book = bookRepository.findById(isbn).orElse(null);
+            if (book == null) throw new NoBooksFoundException("No books found for deletion");
             book.setAuthors(new ArrayList<>());
-            if (book == null) return false;
             bookRepository.delete(book);
             return true;
         } catch (Exception e) {
-            return false;
+            throw new BookDeletionErrorException(e.getMessage());
         }
     }
 }

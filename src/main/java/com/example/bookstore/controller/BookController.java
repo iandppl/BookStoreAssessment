@@ -26,37 +26,42 @@ public class BookController {
 
     @GetMapping()
     public ResponseEntity<List<BookDTO>> findBookByTitleOrAuthor(@RequestParam String titleOrAuthorName) {
-        List<BookDTO> searchResult = bookService.findBooksByTitleOrAuthor(titleOrAuthorName);
-        if(searchResult.isEmpty()){
-            throw new NoBooksFoundException("No books found for this title/author name");
+        try{
+            List<BookDTO> searchResult = bookService.findBooksByTitleOrAuthor(titleOrAuthorName);
+            return ResponseEntity.ok(searchResult);
+        }catch (Exception e){
+            throw new NoBooksFoundException(e.getMessage());
         }
-        return ResponseEntity.ok(searchResult);
     }
 
     @PostMapping
     public ResponseEntity<Boolean> createBook(@RequestBody BookDTO bookDTO) {
-        boolean result = bookService.createBook(bookDTO);
-        if(!result) {
-            throw new BookCreationErrorException("Book is already created");
+        try{
+            boolean result = bookService.createBook(bookDTO);
+            return ResponseEntity.ok(result);
+        } catch (Exception e){
+            throw new BookCreationErrorException(e.getMessage());
         }
-        return ResponseEntity.ok(true);
     }
 
     @PutMapping
     public ResponseEntity<Boolean> updateBook(@RequestBody BookDTO bookDTO) {
-        boolean result = bookService.updateBook(bookDTO);
-        if(!result) {
-            throw new BookUpdateErrorException("Error in updating book. Please check if book have been created");
+        try{
+            boolean result = bookService.updateBook(bookDTO);
+            return ResponseEntity.ok(result);
+        } catch (Exception e){
+            throw new BookUpdateErrorException(e.getMessage());
         }
-        return ResponseEntity.ok(true);
     }
 
     @DeleteMapping
     public ResponseEntity<Boolean> deleteBook(@RequestParam String isbn) {
-        boolean result = bookService.deleteBook(isbn);
-        if(!result) {
-            throw new BookDeletionErrorException("Unable to delete book");
+        try{
+            boolean result = bookService.deleteBook(isbn);
+            return ResponseEntity.ok(result);
+        } catch (Exception e){
+            throw new BookDeletionErrorException(e.getMessage());
         }
-        return ResponseEntity.ok(true);
+
     }
 }

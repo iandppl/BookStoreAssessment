@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -63,7 +62,7 @@ public class BookControllerTest {
 
     @Test
     public void testFindBookByTitleOrAuthor_withNoResult_expectNoBooksFoundExceptionToBeThrown(){
-        given(bookService.findBooksByTitleOrAuthor("John")).willReturn(new ArrayList<>());
+        given(bookService.findBooksByTitleOrAuthor("John")).willThrow(new NoBooksFoundException("Test"));
 
         Assertions.assertThrows(
             NoBooksFoundException.class,
@@ -73,7 +72,7 @@ public class BookControllerTest {
 
     @Test
     public void testCreateBook_withFalseReturn_expectBookCreateExceptionToBeThrown(){
-        given(bookService.createBook(any())).willReturn(false);
+        given(bookService.createBook(any())).willThrow(new BookCreationErrorException("Test"));
 
         AuthorDTO authorDTO = new AuthorDTO();
         authorDTO.setName("John");
@@ -113,8 +112,8 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testUpdateBook_withFalseReturn_expectBookCreateExceptionToBeThrown(){
-        given(bookService.updateBook(any())).willReturn(false);
+    public void testUpdateBook_withException_expectBookCreateExceptionToBeThrown(){
+        given(bookService.updateBook(any())).willThrow(new BookUpdateErrorException("Test"));
 
         AuthorDTO authorDTO = new AuthorDTO();
         authorDTO.setName("John");
@@ -155,7 +154,7 @@ public class BookControllerTest {
 
     @Test
     public void testDeleteBook_withFalseReturn_expectBookCreateExceptionToBeThrown(){
-        given(bookService.deleteBook(any())).willReturn(false);
+        given(bookService.deleteBook(any())).willThrow(new BookDeletionErrorException("Test"));
 
         Assertions.assertThrows(
             BookDeletionErrorException.class,
