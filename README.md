@@ -29,7 +29,7 @@ APIs are guarded with an api key which is in the authentication service
 To add this key, add the key as X-API-KEY with the value as "BookStore".
 This portion of the guarding of api can be replaced with JWT
 1) Get "/api/book?titleOrAuthorName={titleOrAuthorName}"
- - Fetches all books that contains either the title or author (exact match)
+   - Fetches all books that contains either the title or author (exact match)
 2) Post "/api/book/" 
    - Creates BookDTO objects and takes in BookDTO object and if book id is created then BookCreationErrorException will be thrown and will return true if successful
    - Example request body input:{
